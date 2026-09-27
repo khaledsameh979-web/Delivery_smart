@@ -9,5 +9,7 @@ urlpatterns = [
   path('register/', views.register, name='register'),
   path('track/', views.track, name='track'),
   path('driver/', views.driver_home, name='driver_home'),
+  path('dashboard/', views.customer_dashboard, name='customer_dashboard'),
+  path("api/chat/", views.chat_api, name="chat_api"),
   
 ]

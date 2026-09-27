@@ -100,6 +100,45 @@ def driver_home(request):
     return render(request, 'delivery/driver_home.html', {'deliveries': deliveries})
 
 
+@login_required
+def customer_dashboard(request):
+    deliveries = Delivery.objects.filter(customer=request.user.customer)
 
+    status_filter = request.GET.get('status')
+    if status_filter:
+        deliveries = deliveries.filter(status=status_filter)
 
+    deliveries = deliveries.order_by('-scheduled_date')
+
+    all_deliveries = Delivery.objects.filter(customer=request.user.customer)
+    total_count = all_deliveries.count()
+    delivered_count = all_deliveries.filter(status='DELIVERED').count()
+    active_count = all_deliveries.exclude(status__in=['DELIVERED', 'CANCELLED']).count()
+
+    return render(request, 'delivery/customer_dashboard.html', {
+        'deliveries': deliveries,
+        'total_count': total_count,
+        'active_count': active_count,
+        'delivered_count': delivered_count,
+        'status_filter': status_filter,
+    })
+
+import anthropic
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+
+client = anthropic.Anthropic()
+
+@csrf_protect
+def chat_api(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
+
+    user_msg = request.POST.get("message", "")
+    resp = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=500,
+        messages=[{"role": "user", "content": user_msg}],
+    )
+    return JsonResponse({"reply": resp.content[0].text})
 # Create your views here.

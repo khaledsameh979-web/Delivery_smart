@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}My shipments — Smart Delivery{% endblock %}
+
+{% block content %}
+<section>
+  <div class="container">
+    <div class="dashboard-head">
+      <div>
+        <h1 class="mt-0">My shipments</h1>
+      </div>
+      <a href="{% url 'request_shipment' %}" class="btn btn-primary">Send a new shipment</a>
+    </div>
+    <p class="dashboard-sub">Everything you've shipped through Smart Delivery, in one place.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">{{ total_count }}</div>
+        <div class="stat-label">Total shipments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ active_count }}</div>
+        <div class="stat-label">In progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ delivered_count }}</div>
+        <div class="stat-label">Delivered</div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <a href="{% url 'customer_dashboard' %}" class="filter-chip {% if not status_filter %}is-active{% endif %}">All</a>
+      <a href="{% url 'customer_dashboard' %}?status=PENDING" class="filter-chip {% if status_filter == 'PENDING' %}is-active{% endif %}">Pending</a>
+      <a href="{% url 'customer_dashboard' %}?status=ASSIGNED" class="filter-chip {% if status_filter == 'ASSIGNED' %}is-active{% endif %}">Assigned</a>
+      <a href="{% url 'customer_dashboard' %}?status=IN_TRANSIT" class="filter-chip {% if status_filter == 'IN_TRANSIT' %}is-active{% endif %}">In transit</a>
+      <a href="{% url 'customer_dashboard' %}?status=DELIVERED" class="filter-chip {% if status_filter == 'DELIVERED' %}is-active{% endif %}">Delivered</a>
+      <a href="{% url 'customer_dashboard' %}?status=CANCELLED" class="filter-chip {% if status_filter == 'CANCELLED' %}is-active{% endif %}">Cancelled</a>
+    </div>
+
+    {% if deliveries %}
+      <div class="shipment-grid">
+        {% for delivery in deliveries %}
+          {% include "partials/customer_shipment_card.html" with delivery=delivery %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h3>No shipments yet</h3>
+        <p>Once you send a shipment, it'll show up here with live status updates.</p>
+        <a href="{% url 'request_shipment' %}" class="btn btn-primary" style="margin-top:12px;">Send your first shipment</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

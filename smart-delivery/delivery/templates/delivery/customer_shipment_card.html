@@ -1,0 +1,45 @@
+{% comment %}
+Usage: {% include "partials/customer_shipment_card.html" with delivery=delivery %}
+Read-only — the customer never changes status here, they just view it.
+{% endcomment %}
+
+<article class="shipment-card">
+  <div class="shipment-card-head">
+    <div>
+      <div class="shipment-track-no">{{ delivery.tracking_number }}</div>
+      <span class="status-badge status-{{ delivery.status|lower|slugify }}">{{ delivery.get_status_display|default:delivery.status|title }}</span>
+    </div>
+  </div>
+
+  <div class="route-line">
+    <span class="dot"></span>
+    <span>{{ delivery.pickup }}</span>
+    <span class="dash"></span>
+    <span>{{ delivery.dropoff }}</span>
+    <span class="dot"></span>
+  </div>
+
+  <div class="shipment-meta">
+    <div>
+      <div class="shipment-meta-label">Scheduled</div>
+      <div>{{ delivery.scheduled_date }}</div>
+    </div>
+    <div>
+      <div class="shipment-meta-label">Vehicle</div>
+      <div>{{ delivery.vehicle_type }}</div>
+    </div>
+  </div>
+
+  {% if delivery.driver %}
+    <div class="shipment-meta">
+      <div>
+        <div class="shipment-meta-label">Driver</div>
+        <div>{{ delivery.driver.name }}</div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="btn-row">
+    <a href="{% url 'track' %}?tracking_number={{ delivery.tracking_number }}" class="btn btn-secondary btn-sm">View tracking</a>
+  </div>
+</article>
