@@ -42,15 +42,6 @@
         <div class="footer-bottom">
             <p>© {% now "Y" %} توصيل ذكي. جميع الحقوق محفوظة.</p>
         </div>
-            <!-- Chat bubble widget -->
-        <div id="chat-bubble" onclick="toggleChat()">💬</div>
-        <div id="chat-window" class="hidden">
-            <div id="chat-messages"></div>
-            <input id="chat-input" type="text" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-
-        <script src="{% static 'js/chatbot.js' %}"></script>
     </footer>
 
     {% block js %} {% endblock %}
