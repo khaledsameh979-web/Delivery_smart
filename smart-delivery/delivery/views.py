@@ -46,6 +46,7 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'delivery/register.html', {'form': form})
+
 @login_required
 def add(request):
     if request.user.role != 'customer':
@@ -66,6 +67,8 @@ def add(request):
     else:
         form = DeliveryForm()
     return render(request, 'delivery/request_shipment.html', {'form': form})
+
+@login_required
 def track(request):
     delivery=None
     number=request.GET.get('number')
