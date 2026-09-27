@@ -1,0 +1,52 @@
+{% extends "delivery/base.html" %}
+{% block content %}
+<h3>شاشة السائق 🚚</h3>
+<p>أهلاً {{ request.user.driver.name }} — دي شحناتك النشطة:</p>
+
+{% if deliveries %}
+  {% for d in deliveries %}
+    <div class="driver-card">
+      <h4>شحنة {{ d.tracking_number|slice:":8" }}</h4>
+      <p>الحالة: {{ d.get_status_display }}</p>
+      <p>العميل: {{ d.customer.name }} — 📞 {{ d.customer.phone }}</p>
+      <p>من: {{ d.pickup_address }}</p>
+      <p>إلى: {{ d.dropoff_address }}</p>
+      <p>الميعاد: {{ d.scheduled_date|date:"Y-m-d h:i A" }}</p>
+
+      {% if d.status == 'ASSIGNED' %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="delivery_id" value="{{ d.id }}">
+          <input type="hidden" name="new_status" value="IN_TRANSIT">
+          <button>🚚 ابدأ الرحلة</button>
+        </form>
+
+      {% elif d.status == 'IN_TRANSIT' %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="delivery_id" value="{{ d.id }}">
+          <input type="hidden" name="new_status" value="DELIVERED">
+          <button>✅ تم التسليم</button>
+        </form>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="delivery_id" value="{{ d.id }}">
+          <input type="hidden" name="new_status" value="DELAYED">
+          <button>⏰ اتأخرت</button>
+        </form>
+
+      {% elif d.status == 'DELAYED' %}
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="delivery_id" value="{{ d.id }}">
+          <input type="hidden" name="new_status" value="DELIVERED">
+          <button>✅ تم التسليم</button>
+        </form>
+      {% endif %}
+    </div>
+    <br>
+  {% endfor %}
+{% else %}
+  <p>مفيش شحنات مسندة لك دلوقتي ✅</p>
+{% endif %}
+{% endblock %}

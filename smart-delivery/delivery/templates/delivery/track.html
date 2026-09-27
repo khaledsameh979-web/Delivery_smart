@@ -1,0 +1,45 @@
+{% extends "delivery/base.html" %}
+
+{% block content %}
+<h3>تتبع شحنتك</h3>
+<p>اكتب رقم التتبع اللي وصلك وقت الطلب</p>
+
+<form method="get">
+    <input type="text" name="number" placeholder="رقم التتبع">
+    <button>تتبع </button>
+</form>
+
+{% if delivery %}
+    <h4>الشحنة رقم {{ delivery.tracking_number }}</h4>
+    <p><b>الحالة:</b> {{ delivery.get_status_display }}</p>
+    <p><b>العميل:</b> {{ delivery.customer.name }}</p>
+    <p><b>من:</b> {{ delivery.pickup_address }} — <b>إلى:</b> {{ delivery.dropoff_address }}</p>
+    <p><b>الميعاد المخطط:</b> {{ delivery.scheduled_date }}</p>
+    {% if delivery.driver %}
+        <p><b>السائق:</b> {{ delivery.driver.name }}</p>
+    {% else %}
+        <p><b>السائق:</b> لسه مفيش سائق مسند للشحنة</p>
+    {% endif %}
+
+    <h4>خط سير الشحنة</h4>
+    {% if delivery.history.all %}
+        <ul>
+            {% for h in delivery.history.all %}
+                <li>
+                    {% if h.old_status %}
+                        {{ h.old_status }} ← {{ h.new_status }}
+                    {% else %}
+                         ({{ h.new_status }})
+                    {% endif %}
+                     {{ h.changed_at }}
+                    {% if h.changed_by %}
+                         {{ h.changed_by.username }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>لسه مفيش تغييرات حالة مسجلة على الشحنة دي</p>
+    {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "delivery/base.html" %}
+{% block content %} 
+<h3> طلب شحنه جديده</h3>
+<h4> املا البيانات وهنحدد لك افضل سائق في الميعاد اللي تختاره</h4>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>إرسال</button>
+</form>
+{% endblock %}

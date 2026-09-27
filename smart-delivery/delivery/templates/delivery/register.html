@@ -1,0 +1,11 @@
+{% extends "delivery/base.html" %}
+
+{% block content %}
+<h3>إنشاء حساب جديد</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>إنشاء الحساب</button>
+</form>
+<p>عندك حساب بالفعل؟ <a href="{% url 'login' %}">سجل دخول من هنا</a></p>
+{% endblock %}

@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lr9)a5g5k-1y%u8^js+nyq0p^2f%snl+7hc63-+0yz@&wqe73%'
+SECRET_KEY = 'django-insecure-jp(b7mu2kpj6ckzy9c=!v6jm&^mik=dv@^$c#tzm-mo8921e_g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'delivery.app.DeliveryConfig',
+    'delivery',
 ]
+
+# Use the custom user model from the delivery app
+AUTH_USER_MODEL = 'delivery.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,8 +78,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'smart_delivery_db', 
+        'USER': 'postgres',          
+        'PASSWORD': '123000', 
+        'HOST': '127.0.0.1',  
+        'PORT': '5432',
     }
 }
 
@@ -126,3 +133,6 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# الصفحات المحمية (زي request) بتودي الزائر غير المسجل هنا عشان يسجل دخول
+LOGIN_URL = '/login/'
